@@ -1,0 +1,3 @@
+Q1_7_perceptron
+Q1_5_cross_validation
+Q1_7_KNN
