@@ -7,10 +7,10 @@ combo_set_data = combo_set_complete(:, 2:end);
 combo_set_labels = combo_set_complete(:, 1);
 clear combo_set_complete;
 
-setParameters = [2 4 6 8 10 12 14 16];
-testErrors = [];
-optimalParameters = [];
-for i = 1:20
+setParameters = [0.5 1 1.5 2 2.5 3];
+testErrors = zeros(1, 20);
+optimalParameters = zeros(1, 20);
+parfor i = 1:20
     disp("Iteration N: " + string(i));
     randomNum = randperm(length(combo_set_labels));
     trainNum = randomNum(1:floor(length(combo_set_labels)*0.8));
@@ -54,12 +54,13 @@ for i = 1:20
         end
         bestParameterErrors = [bestParameterErrors; mean(crossValErrors)];
     end
-    bestParameter = find(bestParameterErrors == min(bestParameterErrors));
+    positionParameter = find(bestParameterErrors == min(bestParameterErrors));
+    bestParameter = bestParameterErrors(positionParameter);
     SVMDigitClass = SVMDigitClassificator("gaussian", maxIterNumb, bestParameter(1));
     SVMDigitClass = SVMDigitClass.train(trainSet, trainLabels);
     SVMDigitClass = SVMDigitClass.evaluateTestSet(testLabels, testSet);
     [SVMDigitClass, trainError, testError] = SVMDigitClass.classificationError();
-    testErrors = [testErrors testError];
-    optimalParameters = [optimalParameters bestParameter(1)];
+    testErrors(1, i) = testError;
+    optimalParameters(1, i) = bestParameter(1);
 end
 save('Q1_5_cross_val.mat', 'testErrors', 'optimalParameters');
