@@ -2,8 +2,6 @@ classdef SVM < BinaryClassifier
 
     properties
         alphas = []
-        %% Deprecated
-        class = ''
     end
 
     methods
@@ -11,33 +9,47 @@ classdef SVM < BinaryClassifier
         function [obj] = SVM()
         end
 
-        function [alphas] = get_alphas(obj)
-            alphas = obj.alphas;
-        end
-
         function [obj] = init_weigths(obj, labels_)
+            % Initialize the weights with an full of zeros array
+            % inputs:
+            %       - labels_: labels for training set
             obj.weights = zeros(1, length(labels_));
         end
 
         function [obj] = train(obj, kernel_, labels_)
+            % Initialize the weights with an full of zeros array
+            % inputs:
+            %       - kernel_: kernel for training
+            %       - labels_: labels for training set
             output = sign(obj.get_weights());
             alpha = (output~=labels_).*labels_;
 
             obj.weights = obj.weights + alpha*kernel_;
             obj.alphas = [obj.alphas; alpha];
         end
-
-        function [output] = get_output(obj, ~)
-            output = sign(obj.get_weights());
-        end
-
-        function [alpha] = correct(obj, output_)
-            alpha = (output_~=obj.get_labels()).*obj.get_labels();
-        end
-
+        
         function [error] = compute_error(obj, labels_)
+            % Compute the error comparing with the labels
+            % inputs: 
+            %       - labels_: array of labels
             mistakes = sum(sign(obj.weights)~=labels_);
             error = mistakes/length(labels_);
+        end
+
+        %% Getters
+        function [output] = get_output(obj, ~)
+            % Obtain the output
+            % outputs:
+            %       - output: output of the svm
+            output = sign(obj.get_weights());
+        end
+                
+        function [alphas] = get_alphas(obj)
+            % Obtain the alphas that are the training history of the
+            % classifier
+            % outputs:
+            %       - alphas: the training gradients
+            alphas = obj.alphas;
         end
     end
 end

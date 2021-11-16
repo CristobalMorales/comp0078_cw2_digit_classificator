@@ -1,31 +1,22 @@
 classdef ClassifierMetricManager < MetricManager
     
     properties
-
     end
 
     methods
-
         function [obj] = ClassifierMetricManager()
+            % Initialize the basic metrics for classifiers
             obj.true_positives = containers.Map.empty;
             obj.false_positives = containers.Map.empty;
             obj.false_negatives = containers.Map.empty;
             obj.true_negatives = containers.Map.empty;
         end
 
-        function [obj] = compute_metrics(obj, outcome_hndls, class_)
-            test_labels = outcome_hndls.get_test_labels();
-            test_results = outcome_hndls.get_test_results();
-            max_matrix_result = max(test_results.*(test_results > 0));
-            % Using the weights as coefficiente to classify between two
-            % positives
-            detections = (test_results == max_matrix_result).*(max_matrix_result ~=0);
-            test_labels = outcome_hndls.get_test_labels(class_);
-            obj.false_positives(class_) = (detections ~= (test_labels == 1));
-            %testError = sum(sum(testDetections))/(length(testDetections));
-        end
-
         function [obj] = compute_statistics(obj, outcome_hndls)
+            % Compute the statistics for the classifiers 
+            % inputs:
+            %       - outcome_hndls: dict that contains the handlers of the
+            %        outcome
             classes = outcome_hndls.keys();
             for c = 1:length(classes)
                 class = classes{c};
@@ -50,6 +41,10 @@ classdef ClassifierMetricManager < MetricManager
         end
 
         function [obj] = get_results(obj, metrics_, classes_)
+            % Obtain the metrics set in the metrics set
+            % inputs: 
+            %       - metrics_: array of metric to compute
+            %       - classes_: Classes to obtain
             for i = 1:length(metrics_)
                 for c = 1:length(classes_)
                     class = classes_{c};
@@ -60,9 +55,9 @@ classdef ClassifierMetricManager < MetricManager
         end
 
         function [obj] = get_spec_sen(obj, class_)
-            %test_error = containers.Map.empty;
-            %test_error(class_) = sum(obj.false_positives(class_)) / ...
-            %   length(obj.false_positives(class_));
+            % Show sensitivity and specificity of the classes
+            % inputs: 
+            %       - class_: class (string)
             sensivity = sum(obj.true_positives(class_)) / ...
                 (sum(obj.true_positives(class_)) + ...
                 sum(obj.false_negatives(class_)));

@@ -12,11 +12,11 @@ classdef MetricManager
     methods
 
         function [obj] = MetricManager()
+            % Initialize the basic metrics
             obj.higher_results = containers.Map.empty;
         end
         
         function [obj] = compute_results(obj)
-            
         end
     end
 

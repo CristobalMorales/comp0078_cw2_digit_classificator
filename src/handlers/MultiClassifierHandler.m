@@ -10,6 +10,7 @@ classdef MultiClassifierHandler < ClassifierHandler
         end
 
         function [obj] = init_models(obj)
+            % Initialize models and handlers 
             for c = 1:length(obj.classes)
                 class = obj.classes{c};
                 obj = init_models@ClassifierHandler(obj, class);
@@ -17,6 +18,7 @@ classdef MultiClassifierHandler < ClassifierHandler
         end
 
         function [obj] = train_model(obj)
+            % Train models
             for c = 1:length(obj.classes)
                 class = obj.classes{c};
                 bin_labels = Helpers.bynarize_labels(obj.data_handler.get_train_labels(), class);
@@ -26,6 +28,7 @@ classdef MultiClassifierHandler < ClassifierHandler
         end
 
         function [obj] = test_model(obj)
+            % Test models
             for c = 1:length(obj.classes)
                 class = obj.classes{c};
                 bin_labels = Helpers.bynarize_labels(obj.data_handler.get_test_labels(), class);
@@ -33,13 +36,13 @@ classdef MultiClassifierHandler < ClassifierHandler
             end
         end
 
-        function [obj, metric_manager] = get_results(obj, metric_manager)
+        function [metric_manager] = get_results(obj, metric_manager)
+            % Obtain the results
+            % inputs:
+            %       - metric_manager: metric manager to store results
+            % outputs:
+            %       - metric_manager
             metric_manager = metric_manager.compute_statistics(obj.outcome_handler);
-            %             for c = 1:length(obj.classes)
-            %                 class = obj.classes{c};
-            %                 test_results = obj.outcome_handler(class).get_test_results();
-            %                 metric_manager = metric_manager.compute_statistics(obj.outcome_handler);
-            %             end
             metric_manager = metric_manager.get_results(obj.metrics, obj.classes);
         end
 

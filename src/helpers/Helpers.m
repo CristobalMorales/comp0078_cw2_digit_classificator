@@ -2,6 +2,12 @@ classdef Helpers
 
     methods (Static)
         function [labels] = bynarize_labels(labels_, class_)
+            % Bynarize the labels
+            % inputs:
+            %       - labels_: labels to bynarize
+            %       - class_: Class in string format 
+            % outputs:
+            %       - labels: labels bynarized
             if ischar(class_)
                 class = str2double(class_);
             end
@@ -16,9 +22,14 @@ classdef Helpers
         end
 
         function obj_b = copy_obj(obj_a)
-            obj_b = eval(class(obj_a));  %create default object of the same class as a. one valid use of eval
-            for p =  properties(obj_a).'  %copy all public properties
-                try   %may fail if property is read-only
+            % Copy an object
+            % inputs:
+            %       - obj_a: Object to copy
+            % outputs:
+            %       - obj_b: Object resulte
+            obj_b = eval(class(obj_a));  
+            for p =  properties(obj_a).'
+                try
                     obj_b.(p{1}) = obj_a.(p{1});
                 catch
                     warning('failed to copy property: %s', p);

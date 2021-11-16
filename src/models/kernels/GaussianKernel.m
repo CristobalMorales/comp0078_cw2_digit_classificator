@@ -4,6 +4,10 @@ classdef GaussianKernel < Kernel
     methods
 
         function [obj] = compute(obj, data_, sec_data_)
+            % Compute gaussian kernel
+            % inputs: 
+            %       - data_: first set of data
+            %       - sec_data_: second set of data
             obj = obj.init_kernel(data_);
             beta = 1/(2*obj.r^2);
             for i = 1:ndata
