@@ -1,5 +1,6 @@
 classdef DataSetManager
-    properties (Access=private)
+
+    properties (Access=protected)
         labels = []
         data = []
         
@@ -7,13 +8,11 @@ classdef DataSetManager
         train_labels = []
         test_set = []
         test_labels = []
-
-        train_kernel = []
-        test_kernel = []
     end
+
     methods
 
-        function [obj] = DataSetManager(labels_, data_, kernel_)
+        function [obj] = DataSetManager(labels_, data_)
             % Add the data, labels and kernels
             % inputs:
             %       - labels_: array of labels
@@ -21,10 +20,6 @@ classdef DataSetManager
             %       - kernel_: kernel object
             obj.labels = labels_(:, 1);
             obj.data = data_';
-            if isa(kernel_, "Kernel")
-                obj.train_kernel = kernel_;
-                obj.test_kernel = Helpers.copy_obj(obj.train_kernel);
-            end
         end
 
         function [obj] = split_dataset(obj, n_train_percentage)
@@ -40,13 +35,6 @@ classdef DataSetManager
         end
 
         function [obj] = compute_kernels(obj)
-            % Split the dataset into train and test set
-            % inputs: 
-            %       - n_train_percentage: porcentaje of training set
-            obj.train_kernel = obj.train_kernel.init_kernel(obj.train_set);
-            obj.test_kernel = obj.test_kernel.init_kernel(obj.test_set);
-            obj.train_kernel = obj.train_kernel.compute(obj.train_set, obj.train_set);
-            obj.test_kernel = obj.test_kernel.compute(obj.train_set, obj.test_set);
         end
 
         %% Getters
@@ -64,19 +52,27 @@ classdef DataSetManager
             labels = obj.test_labels;
         end
 
-        function [kernel] = get_train_kernel(obj)
+        function [kernel] = get_train_data(obj)
             % Train kernel getter
-            % outputs: 
+            % outputs:
             %       - labels: train kernel
-            kernel = obj.train_kernel.get_kernel();
+            kernel = obj.train_set;
         end
 
-        function [kernel] = get_test_kernel(obj)
+        function [kernel] = get_test_data(obj)
             % Train labels getter
-            % outputs: 
+            % outputs:
             %       - labels: train labels
-            kernel = obj.test_kernel.get_kernel();
+            kernel = obj.test_set;
         end
 
+        function [results] = get_test_results(obj, model, bin_labels)
+            % Obtain the test results
+            % inputs:
+            %       - model: classifier model
+            % output:
+            %       - results: array of results
+            results = model.get_output(obj.test_set, bin_labels);
+        end
     end
 end

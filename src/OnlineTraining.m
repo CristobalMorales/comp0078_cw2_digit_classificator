@@ -24,7 +24,7 @@ classdef OnlineTraining
             %       - data: data to train the model
             %       - labels: Labels of the training data
             if isequal(class(classificator),'LeastSquare') || isequal(class(classificator),'KNN')
-                [classificator] = train_least(obj, classificator, data, labels);
+                [classificator] = train_least(obj, classificator, data);
             else
                 [classificator] = train_svm(obj, classificator, data, labels);
             end
@@ -55,7 +55,7 @@ classdef OnlineTraining
             %       - classificator: The model to be trained
             %       - data: data to train the model
             %       - labels: Labels of the training data
-            [classificator] = classificator.updateParameters(data);
+            [classificator] = classificator.train(data);
         end
     end
 end

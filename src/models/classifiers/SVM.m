@@ -37,11 +37,11 @@ classdef SVM < BinaryClassifier
         end
 
         %% Getters
-        function [output] = get_output(obj, ~)
+        function [output] = get_output(obj, data)
             % Obtain the output
             % outputs:
             %       - output: output of the svm
-            output = sign(obj.get_weights());
+            output = sum(obj.get_alphas()*data);
         end
                 
         function [alphas] = get_alphas(obj)

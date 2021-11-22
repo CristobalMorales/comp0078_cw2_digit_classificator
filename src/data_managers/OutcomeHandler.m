@@ -3,16 +3,12 @@ classdef OutcomeHandler
     properties
         test_results = []
         test_labels = []
-        class = []
     end
 
     methods
 
-        function [obj] = OutcomeHandler(class_)
+        function [obj] = OutcomeHandler()
             % Set the class
-            % inputs:
-            %       - class_: the name of the class
-            obj.class = class_;
         end
 
         function [obj] = add_results(obj, test_results_, test_labels_)

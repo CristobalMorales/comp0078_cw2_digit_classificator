@@ -9,11 +9,11 @@ classdef MultiClassifierHandler < ClassifierHandler
             obj = obj@ClassifierHandler(varargin);
         end
 
-        function [obj] = init_models(obj)
+        function [obj] = init_models(obj, model, outcome_hndlr)
             % Initialize models and handlers 
             for c = 1:length(obj.classes)
                 class = obj.classes{c};
-                obj = init_models@ClassifierHandler(obj, class);
+                obj = init_models@ClassifierHandler(obj, class, model, outcome_hndlr);
             end
         end
 
